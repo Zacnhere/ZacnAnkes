@@ -36,8 +36,8 @@ class BTN:
         button = ikb([
             ["| Menu Help - AH |"],
             [
-              "| Group - https://t.me/tongkronganmabar |",
-              "| Owner - https://t.me/shinteiko |",
+              "| Group - https://t.me/Zacn_Support |",
+              "| Owner - https://t.me/ZacnBoys |",
             ]
         ])
         return button
