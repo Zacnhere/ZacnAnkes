@@ -2,8 +2,8 @@ import os
 
 
 class Config(object):
-    API_ID = int(os.getenv("API_ID", "24623085"))
-    API_HASH = os.getenv("API_HASH", "75ce0c6125ae201c9e3d5a825c667a91")
+    API_ID = int(os.getenv("API_ID", "26761656"))
+    API_HASH = os.getenv("API_HASH", "80dd784497f5fb01d74f2d2529fe3e8e")
     BOT_TOKEN = os.environ.get("BOT_TOKEN", "7068529485:AAHevXamyL-PtSfvu5l-91D6BY9i4dwlwzo")
     OWNER_ID = int(os.getenv("OWNER_ID", "1361379181"))
     MONGO_URL = os.getenv(
