@@ -18,7 +18,7 @@ class ConnectionHandler(logging.Handler):
     def emit(self, record):
         error_types = ["OSError", "TimeoutError"]
         if any(error_type in record.getMessage() for error_type in error_types):
-            os.system(f"kill -9 {os.getpid()} && python3 -m Teiko")
+            os.system(f"kill -9 {os.getpid()} && python3 -m ZacnAnkes")
 
 logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
