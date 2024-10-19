@@ -56,7 +56,7 @@ class Bot(Client):
         await super().start()
 
 
-TB = Bot(name="TeikoBot")
+TB = Bot(name="ZacnBot")
 
 
 from Teiko.tools.database import *
