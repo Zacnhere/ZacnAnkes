@@ -8,7 +8,7 @@ from Teiko import *
 async def _(client, message):
     user_id = await extract_user(message)
     if not user_id:
-        return await message.reply("<blockquote><b>Reply to a user or provide a valid ID/username!</b></blockquote>")
+        return await message.reply("<b>Reply to a user or provide a valid ID/username!</b>")
             
     try:
         user = await client.get_users(user_id)
