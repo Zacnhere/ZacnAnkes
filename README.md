@@ -1,4 +1,4 @@
-## Zacn Userbot
+## Zacn Ankes
 ```
 sudo apt-get update && sudo apt-get upgrade -y 
 ```
