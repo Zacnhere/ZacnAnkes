@@ -8,6 +8,6 @@ class Config(object):
     OWNER_ID = int(os.getenv("OWNER_ID", "1361379181"))
     MONGO_URL = os.getenv(
         "MONGO_URL",
-        "mongodb+srv://ZacnAnkes:ZacnAnkes@cluster0.vcbtd.mongodb.net/?retryWrites=true&w=majority&appName=ZACNHERE",
+        "",
     )
 
