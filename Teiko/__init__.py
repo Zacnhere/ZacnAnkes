@@ -1,4 +1,5 @@
 import uvloop
+import asyncio
 
 uvloop.install()
 
