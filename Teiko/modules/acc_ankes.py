@@ -118,10 +118,8 @@ async def _(client, message):
 
 @PY.BOT("bl|addbl", filters.group)
 @PY.ADMIN
-async def _(client, message):
-
+async def add_to_blacklist(client, message):
     if message.reply_to_message:
-        
         text = message.reply_to_message.text or message.reply_to_message.caption
     else:
         return await message.reply("<b>Reply to a message to add it to the blacklist.</b>")
@@ -129,7 +127,6 @@ async def _(client, message):
     try:
         await add_word(client, message, text)
     except Exception as e:
-
         return await message.reply(f"Error: `{e}`")
 
     response = (
@@ -140,21 +137,23 @@ async def _(client, message):
     return await message.reply(response)
 
 
-@PY.BOT("rembl|rbl", filters.group)
+@PY.BOT("unbl|removebl", filters.group)
 @PY.ADMIN
-async def _(client, message):
+async def remove_from_blacklist(client, message):
     if message.reply_to_message:
         text = message.reply_to_message.text or message.reply_to_message.caption
     else:
-        return await message.reply("<b>Reply to message</b>")
+        return await message.reply("<b>Reply to a message to remove it from the blacklist.</b>")
 
     try:
         await remove_word(client, message, text)
+    except ValueError:
+        return await message.reply("<b>Word not found in blacklist.</b>")
     except Exception as e:
         return await message.reply(f"Error: `{e}`")
 
     response = (
-        f"<b>Successfully remove prohibited words:</b>\n"
+        f"<b>Successfully removed prohibited words:</b>\n"
         f"{text}"
     )
 
@@ -162,15 +161,26 @@ async def _(client, message):
 
 
 async def add_word(client, message, text):
+    # Mendapatkan daftar kata blacklist yang ada
     bl_text = await DB.get_vars(TB.me.id, f"word_{message.chat.id}") or []
+    
+    # Validasi untuk mencegah duplikasi
+    if text in bl_text:
+        raise ValueError("Word already exists in blacklist.")
+    
+    # Menambahkan kata baru ke daftar
     bl_text.append(text)
     await DB.set_vars(TB.me.id, f"word_{message.chat.id}", bl_text)
 
 
 async def remove_word(client, message, text):
+    # Mendapatkan daftar kata blacklist yang ada
     bl_text = await DB.get_vars(TB.me.id, f"word_{message.chat.id}") or []
-    bl_text.remove(text)
+    
+    # Menghapus kata dari daftar
+    bl_text.remove(text)  # Akan memunculkan ValueError jika kata tidak ditemukan
     await DB.set_vars(TB.me.id, f"word_{message.chat.id}", bl_text)
+        
 
 
 @TB.on_message(filters.text & ~filters.private & Ankes)
