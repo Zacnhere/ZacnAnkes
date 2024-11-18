@@ -116,18 +116,20 @@ async def _(client, message):
     await message.reply(txt)
     
 
-
 @PY.BOT("bl|addbl", filters.group)
 @PY.ADMIN
 async def _(client, message):
+
     if message.reply_to_message:
+        
         text = message.reply_to_message.text or message.reply_to_message.caption
     else:
-        return await message.reply("<b>Reply to message</b>")
+        return await message.reply("<b>Reply to a message to add it to the blacklist.</b>")
 
     try:
         await add_word(client, message, text)
     except Exception as e:
+
         return await message.reply(f"Error: `{e}`")
 
     response = (
