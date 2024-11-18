@@ -94,22 +94,27 @@ async def _(client, message):
 async def _(client, message):
     if len(message.command) < 2:
         return await message.reply(
-            f"<b>Use on or off</b>"
+            "<b>Usage: /ankes on or /ankes off</b>"
         )
 
     query = {"on": True, "off": False}
     command = message.command[1].lower()
+    
     if command not in query:
         return await message.reply(
-            f"<b>User on or off</b>"
+            "<b>Invalid argument! Use 'on' or 'off'.</b>"
         )
+    
     txt = (
-        "<b>activated successfully</b>"
+        "<b>Ankes activated successfully!</b>"
         if command == "on"
-        else "<b>deactivated successfully</b>"
+        else "<b>Ankes deactivated successfully!</b>"
     )
+
     await DB.set_vars(TB.me.id, f"chat_{message.chat.id}", query[command])
+
     await message.reply(txt)
+    
 
 
 @PY.BOT("bl|addbl", filters.group)
