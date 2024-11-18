@@ -12,16 +12,22 @@ async def _(client, message):
             
     try:
         user = await client.get_users(user_id)
-        whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
-        if user_id in whitelist:
-            return await message.reply(f"<b>Already on whitelist!</b>")
-        blacklist = await DB.get_list_vars(TB.me.id, "blacklist")
-        if user_id in blacklist:
-            return await message.reply("<b>The user is registered in the blacklist!</b>")
-            
+
+        whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}") or []
+        if user.id in whitelist:
+            return await message.reply(f"<b>The user is already in the whitelist!</b>")
+        
+        blacklist = await DB.get_list_vars(TB.me.id, "blacklist") or []
+        if user.id in blacklist:
+            return await message.reply(f"<b>The user is registered in the blacklist!</b>")
+
         await DB.add_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
-        return await message.reply(f"<b>Adding to whitelist!</b>  [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})")
+
+        return await message.reply(
+            f"<b>Added to whitelist:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
+        )
     except Exception as e:
+        
         return await message.reply(f"<b>An error occurred:</b> {str(e)}")
 
 
