@@ -40,13 +40,20 @@ async def _(client, message):
     
     try:
         user = await client.get_users(user_id)
-        whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
-        if user_id not in whitelist:
-            return await message.reply(f"<b>Not in whitelist!</b>")
+
+        whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}") or []
+        
+        if user.id not in whitelist:
+            return await message.reply(f"<b>The user is not in the whitelist!</b>")
+
         await DB.remove_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
-        return await message.reply(f"<b>Remove to whitelist!</b>  [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})")
+
+        return await message.reply(
+            f"<b>Removed from whitelist:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
+        )
     except Exception as e:
-        return await message.reply(f"<b>An error occurred:</b> {str(e)}")
+
+        return await message.reply(f"<b>An error occurred:</b> {str(e)}")     
 
 
 @PY.BOT("whitelist", filters.group)
