@@ -182,29 +182,44 @@ async def remove_word(client, message, text):
     await DB.set_vars(TB.me.id, f"word_{message.chat.id}", bl_text)
         
 
-
 @TB.on_message(filters.text & ~filters.private & Ankes)
-async def _(client, message):
-    text = "<b>Maaf, Grup ini tidak terdaftar di dalam list. Silahkan hubungi @shinteiko Untuk mendaftarkan Group Anda!</b>"
-    chat_id = message.chat.id
-    chats = await DB.get_list_vars(TB.me.id, "ankes_group")
+async def handle_message(client, message):
+    # Pesan default jika grup tidak terdaftar
+    default_text = (
+        "<b>Maaf, Grup ini tidak terdaftar dalam daftar. Silahkan hubungi @shinteiko "
+        "untuk mendaftarkan grup Anda!</b>"
+    )
 
+    chat_id = message.chat.id
+
+    # Memeriksa apakah fitur Ankes aktif untuk grup
     on_off_ankes = await DB.get_vars(TB.me.id, f"chat_{chat_id}")
     if not on_off_ankes:
         return
 
+    # Memeriksa apakah grup ada dalam daftar yang diizinkan
+    chats = await DB.get_list_vars(TB.me.id, "ankes_group")
     if chat_id not in chats:
-        await message.reply(text)
+        await message.reply(default_text)
         await asyncio.sleep(30)
         return
 
+    # Mencoba menghapus pesan pengguna
     try:
         await message.delete()
     except FloodWait as e:
+        # Tunggu jika ada pembatasan FloodWait
         await asyncio.sleep(e.x)
-        await message.delete()
+        try:
+            await message.delete()
+        except Exception as inner_error:
+            await message.reply(f"<b>Gagal menghapus pesan: {str(inner_error)}</b>")
     except MessageDeleteForbidden:
-        pass
-    except Exception:
-        await message.reply(f"<b>Error deleting message</b>")
-
+        # Jika bot tidak memiliki izin untuk menghapus pesan
+        await message.reply(
+            "<b>Saya tidak memiliki izin untuk menghapus pesan di grup ini. "
+            "Pastikan bot memiliki izin yang benar.</b>"
+        )
+    except Exception as e:
+        # Penanganan kesalahan umum
+        await message.reply(f"<b>Terjadi kesalahan:</b> {str(e)}")
