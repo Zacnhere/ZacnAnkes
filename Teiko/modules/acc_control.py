@@ -1,8 +1,8 @@
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from datetime import datetime, timedelta
+from some_modul import PY
 import asyncio
-form some_modul import PY
 
 @PY.BOT("profile")
 async def profile_handler(client, message):
