@@ -1,7 +1,7 @@
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from datetime import datetime, timedelta
-from some_modul import PY
+from * import PY
 import asyncio
 
 @PY.BOT("profile")
