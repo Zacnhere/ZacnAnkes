@@ -13,6 +13,23 @@ from dotenv import load_dotenv
 # Install uvloop untuk mempercepat asyncio
 uvloop.install()
 
+async def main():
+    # Your async logic here
+    pass
+
+if __name__ == "__main__":
+    # Set up uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+    
+    loop = asyncio.get_event_loop()
+
+    try:
+        loop.run_until_complete(main())
+    except KeyboardInterrupt:
+        pass
+    finally:
+        loop.close()
+        
 # Memuat variabel lingkungan dari file .env (jika ada)
 load_dotenv()
 
