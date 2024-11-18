@@ -134,4 +134,3 @@ async def remove_user_from_anti_list(client, message):
         user = await client.get_users(user_id)
         anti = await DB.get_list_vars(TB.me.id, "anti_message_user") or []
         if user_id not in anti:
-            return await message.reply("<b>User is not in Anti-User list
