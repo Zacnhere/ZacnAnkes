@@ -12,7 +12,7 @@ from pyrogram.types import InlineKeyboardMarkup as ikb  # Untuk membuat tombol i
 
 user_cache = {}
 
-@PY.UBOT("antispam")
+@PY.BOT("antispam")
 async def _(client, message):
     chat_id = message.chat.id
 
