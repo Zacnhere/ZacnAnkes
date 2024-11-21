@@ -66,9 +66,6 @@ async def _(client, message):
     await db.set_vars(client.me.id, f"antispam_chat_{message.chat.id}", status)
     await message.reply(f"<b>Antispam berhasil diatur menjadi:</b> <code>{status}</code>")
     
-
-            user_cache[(user_id, chat_id)] = user_data
-            return
     else:
         user_data["message_count"] = 1
 
