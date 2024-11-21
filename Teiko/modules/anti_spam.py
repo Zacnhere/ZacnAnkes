@@ -67,7 +67,6 @@ async def _(client, message):
     await message.reply(f"<b>Antispam berhasil diatur menjadi:</b> <code>{status}</code>")
     
 
-            user_data["message_count"] = 1
             user_cache[(user_id, chat_id)] = user_data
             return
     else:
