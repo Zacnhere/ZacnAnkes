@@ -1,3 +1,7 @@
+from pyrogram import *
+
+from Teiko import *
+
 import asyncio  # Untuk penjadwalan tugas async
 from pyrogram import Client, filters  # Untuk interaksi dengan Telegram melalui Pyrogram
 from pyrogram.types import Message  # Tipe pesan Telegram
