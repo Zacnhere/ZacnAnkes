@@ -1,3 +1,11 @@
+import asyncio  # Untuk penjadwalan tugas async
+from pyrogram import Client, filters  # Untuk interaksi dengan Telegram melalui Pyrogram
+from pyrogram.types import Message  # Tipe pesan Telegram
+from pyrogram.errors import FloodWait  # Untuk menangani pembatasan Telegram
+from typing import Dict, Tuple  # Untuk tipe anotasi pada fungsi
+from pyrogram.types import InlineKeyboardMarkup as ikb  # Untuk membuat tombol inline
+
+
 user_cache = {}
 
 @PY.UBOT("antispam")
@@ -34,6 +42,26 @@ async def _(client, message):
             )
 
             await message.delete()
+
+@PY.UBOT("setantispam")
+async def _(client, message):
+    # Hanya admin yang bisa mengatur antispam
+    if not message.chat.admin_rights:
+        return await message.reply("<b>Hanya admin yang dapat mengubah pengaturan antispam!</b>")
+
+    # Ambil argumen (on/off)
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2:
+        return await message.reply("<b>Gunakan perintah:</b> <code>setantispam [on/off]</code>")
+
+    status = args[1].lower()
+    if status not in ["on", "off"]:
+        return await message.reply("<b>Status hanya bisa diatur menjadi:</b> <code>on</code> atau <code>off</code>")
+
+    # Simpan status ke database
+    await db.set_vars(client.me.id, f"antispam_chat_{message.chat.id}", status)
+    await message.reply(f"<b>Antispam berhasil diatur menjadi:</b> <code>{status}</code>")
+    
 
             user_data["message_count"] = 0
             user_cache[(user_id, chat_id)] = user_data
