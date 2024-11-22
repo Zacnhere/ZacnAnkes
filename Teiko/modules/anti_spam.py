@@ -7,71 +7,62 @@ import asyncio
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 
-# Cache untuk menyimpan data sementara
-user_cache = {}
+import time
+from collections import deque
 
-@Client.on_message(filters.text)
-async def antispam_handler(client: Client, message: Message):
-    chat_id = message.chat.id
+# Simpan pesan yang dikirim dalam rentang waktu tertentu untuk deteksi spam
+message_cache = deque()
 
-    # Cek status antispam
-    antispam_status = await db.get_vars(client.me.id, f"antispam_chat_{chat_id}")
-    if not antispam_status:  # Jika antispam tidak aktif
+# Cooldown untuk deteksi spam
+SPAM_COOLDOWN = 1  # Deteksi spam 1 detik
+MAX_SPAM_COUNT = 2  # 2 pesan dalam 1 detik dianggap spam
+
+# Status Anti-Spam (default aktif)
+anti_spam_enabled = True
+
+@PY.BOT("antispam", filters.group)
+async def anti_spam(client, message):
+    global anti_spam_enabled  # Mengakses variabel status dari luar fungsi
+
+    # Perintah untuk menyalakan atau mematikan anti-spam
+    if message.text.lower() == "/antispam on":
+        anti_spam_enabled = True
+        return await message.reply("<b>Anti-Spam has been enabled.</b>")
+
+    if message.text.lower() == "/antispam off":
+        anti_spam_enabled = False
+        return await message.reply("<b>Anti-Spam has been disabled.</b>")
+
+    # Jika fitur anti-spam dimatikan, tidak ada yang dilakukan
+    if not anti_spam_enabled:
         return
 
+    # Mendapatkan ID pengirim pesan
     user_id = message.from_user.id
-    user = await client.get_users(user_id)
-    this_user = f"[{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
-    current_time = asyncio.get_event_loop().time()
+    
+    # Waktu saat pesan diterima
+    current_time = time.time()
 
-    # Ambil data pengguna dari cache atau database
-    user_data = user_cache.get((user_id, chat_id))
-    if not user_data:
-        user_data = await db.get_user_data(user_id, chat_id) or {
-            "last_message_time": 0,
-            "message_count": 0,
-        }
-        user_cache[(user_id, chat_id)] = user_data
+    # Menyimpan pesan yang baru diterima dengan waktu saat diterima
+    message_cache.append((user_id, message.text, current_time))
+    
+    # Hapus pesan yang lebih lama dari waktu cooldown
+    while message_cache and message_cache[0][2] < current_time - SPAM_COOLDOWN:
+        message_cache.popleft()
 
-    # Cek jika pengguna mengirim pesan terlalu cepat
-    if current_time - user_data["last_message_time"] < 2:
-        user_data["message_count"] += 1
+    # Deteksi spam jika ada dua pesan dari user yang sama dalam 1 detik
+    recent_messages = [msg for msg in message_cache if msg[0] == user_id]
 
-        if user_data["message_count"] > 2:
-            btn = ikb([["| support - https://t.me/shinchilld |"]])
-
-            await client.send_message(
-                chat_id,
-                f"{this_user}\n<b>Peringatan! Jangan mengirim pesan terlalu cepat!</b>",
-                reply_markup=btn,
-            )
+    if len(recent_messages) >= MAX_SPAM_COUNT:
+        # Jika terdeteksi spam, hapus pesan terakhir
+        try:
             await message.delete()
-    else:
-        user_data["message_count"] = 0  # Reset hitungan pesan
-
-    user_data["last_message_time"] = current_time
-    user_cache[(user_id, chat_id)] = user_data  # Simpan kembali data pengguna
-
-
-@Client.on_message(filters.command("antispam"))
-async def antispam_toggle(client: Client, message: Message):
-    if len(message.command) < 2:
-        return await message.reply(
-            "<b>Usage:</b>\n/antispam on or off"
-        )
-
-    query = {"on": True, "off": False}
-    command = message.command[1].lower()
-    if command not in query:
-        return await message.reply(
-            "<b>Usage:</b>\n/antispam on or off"
-        )
-
-    txt = (
-        "<b>Antispam activated successfully</b>"
-        if command == "on"
-        else "<b>Antispam deactivated successfully</b>"
-    )
-    await db.set_vars(client.me.id, f"antispam_chat_{message.chat.id}", query[command])
-    return await message.reply(txt)
+            return await message.reply("<b>Spam detected! Your last message has been deleted as a punishment.</b>")
+        except Exception as e:
+            return await message.reply(f"<b>Failed to delete message:</b> <code>{str(e)}</code>")
+    
+    # Informasikan user jika mereka hampir mencapai batas spam
+    remaining_spam = MAX_SPAM_COUNT - len(recent_messages)
+    if remaining_spam == 1:
+        await message.reply("<b>Warning:</b> Please avoid sending the same message multiple times in quick succession.")
     
