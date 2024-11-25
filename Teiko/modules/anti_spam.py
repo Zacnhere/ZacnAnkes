@@ -3,66 +3,57 @@ from pyrogram import *
 from Teiko import *
 
 from pyrogram import Client, filters
-import asyncio
-from pyrogram.types import Message
-from pyrogram.errors import FloodWait
+from collections import defaultdict
+import logging
 
-import time
-from collections import deque
 
-# Simpan pesan yang dikirim dalam rentang waktu tertentu untuk deteksi spam
-message_cache = deque()
+# Penyimpanan status spam per pengguna dan status aktif/spam
+spam_users = defaultdict(int)  # Menyimpan jumlah pesan yang sama yang dikirim oleh pengguna
+user_free = set()  # Set pengguna yang bebas dari penghapusan spam
+spam_enabled = True  # Status deteksi spam (aktif/tidak)
 
-# Cooldown untuk deteksi spam
-SPAM_COOLDOWN = 1  # Deteksi spam 1 detik
-MAX_SPAM_COUNT = 2  # 2 pesan dalam 1 detik dianggap spam
+# Menambahkan admin ID Anda
+ADMIN_ID = 1361379181  # Ganti dengan ID admin grup Anda
 
-# Status Anti-Spam (default aktif)
-anti_spam_enabled = True
-
-@PY.BOT("antispam", filters.group)
-async def anti_spam(client, message):
-    global anti_spam_enabled  # Mengakses variabel status dari luar fungsi
-
-    # Perintah untuk menyalakan atau mematikan anti-spam
-    if message.text.lower() == "/antispam on":
-        anti_spam_enabled = True
-        return await message.reply("<b>Anti-Spam has been enabled.</b>")
-
-    if message.text.lower() == "/antispam off":
-        anti_spam_enabled = False
-        return await message.reply("<b>Anti-Spam has been disabled.</b>")
-
-    # Jika fitur anti-spam dimatikan, tidak ada yang dilakukan
-    if not anti_spam_enabled:
-        return
-
-    # Mendapatkan ID pengirim pesan
+# Fungsi untuk mendeteksi spam
+@PY.BOT("antispam")
+async def antispam(client, message):
+    global spam_enabled
+    
+    if not spam_enabled:
+        return  # Tidak memproses pesan jika spam tidak diaktifkan
+    
     user_id = message.from_user.id
+    message_text = message.text
     
-    # Waktu saat pesan diterima
-    current_time = time.time()
+    if user_id not in user_free:  # Hanya proses pesan jika pengguna tidak bebas
+        spam_users[user_id] += 1
+        if spam_users[user_id] >= 2:  # Deteksi spam jika pesan yang sama dikirim 2 kali atau lebih
+            if message.chat.get_member(user_id).status != 'administrator':  # Cek apakah pengguna bukan admin
+                await message.delete()  # Hapus pesan spam
+                await message.reply('Pesan spam Anda telah dihapus.')
+                return
+    
+    # Reset jumlah pesan jika pesan berbeda
+    spam_users[user_id] = 0
 
-    # Menyimpan pesan yang baru diterima dengan waktu saat diterima
-    message_cache.append((user_id, message.text, current_time))
-    
-    # Hapus pesan yang lebih lama dari waktu cooldown
-    while message_cache and message_cache[0][2] < current_time - SPAM_COOLDOWN:
-        message_cache.popleft()
+# Fungsi untuk perintah /on (aktifkan deteksi spam)
+@PY.BOT("on")
+async def on_handler(client, message):
+    global spam_enabled
+    spam_enabled = True
+    await message.reply('Deteksi spam diaktifkan!')
 
-    # Deteksi spam jika ada dua pesan dari user yang sama dalam 1 detik
-    recent_messages = [msg for msg in message_cache if msg[0] == user_id]
+# Fungsi untuk perintah /off (nonaktifkan deteksi spam)
+@PY.BOT("off")
+async def off_handler(client, message):
+    global spam_enabled
+    spam_enabled = False
+    await message.reply('Deteksi spam dinonaktifkan!')
 
-    if len(recent_messages) >= MAX_SPAM_COUNT:
-        # Jika terdeteksi spam, hapus pesan terakhir
-        try:
-            await message.delete()
-            return await message.reply("<b>Spam detected! Your last message has been deleted as a punishment.</b>")
-        except Exception as e:
-            return await message.reply(f"<b>Failed to delete message:</b> <code>{str(e)}</code>")
-    
-    # Informasikan user jika mereka hampir mencapai batas spam
-    remaining_spam = MAX_SPAM_COUNT - len(recent_messages)
-    if remaining_spam == 1:
-        await message.reply("<b>Warning:</b> Please avoid sending the same message multiple times in quick succession.")
-    
+# Fungsi untuk perintah /free (bebaskan pengguna dari penghapusan spam)
+@PY.BOT("free")
+async def free_handler(client, message):
+    user_free.add(message.from_user.id)
+    await message.reply('Anda sekarang bebas dari penghapusan spam!')
+
