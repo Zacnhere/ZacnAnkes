@@ -38,14 +38,14 @@ async def antispam(client, message):
     spam_users[user_id] = 0
 
 # Fungsi untuk perintah /on (aktifkan deteksi spam)
-@PY.BOT("on")
+@PY.BOT("spamon")
 async def on_handler(client, message):
     global spam_enabled
     spam_enabled = True
     await message.reply('Deteksi spam diaktifkan!')
 
 # Fungsi untuk perintah /off (nonaktifkan deteksi spam)
-@PY.BOT("off")
+@PY.BOT("spamoff")
 async def off_handler(client, message):
     global spam_enabled
     spam_enabled = False
