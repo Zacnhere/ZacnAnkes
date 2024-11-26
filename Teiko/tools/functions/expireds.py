@@ -19,11 +19,11 @@ async def exp_ankes():
                         await DB.rem_exp(chat_id)
                         await DB.set_vars(TB.me.id, f"chat_{chat_id}", False)
                         await DB.remove_list_vars(TB.me.id, "ankes_group", chat_id)
-                        await TB.send_message(chat_id, f"<b>Masa Aktif telah habis, jika ingin memperpanjang masa aktif silakan hubungi @shinteiko !!!</b>")
+                        await TB.send_message(chat_id, f"<b>Masa Aktif telah habis, jika ingin memperpanjang masa aktif silakan hubungi @zacnboys !!!</b>")
             except Exception as e:
                 print(f"Error processing chat_id {chat_id}: {e}")
                 await DB.rem_exp(chat_id)
                 await DB.set_vars(TB.me.id, f"chat_{chat_id}", False)
                 await DB.remove_list_vars(TB.me.id, "ankes_group", chat_id)
-                await TB.send_message(chat_id, f"<b>Masa Aktif telah habis, jika ingin memperpanjang masa aktif silakan hubungi @shinteiko !!!</b>")
+                await TB.send_message(chat_id, f"<b>Masa Aktif telah habis, jika ingin memperpanjang masa aktif silakan hubungi @zacnboys !!!</b>")
         await asyncio.sleep(60)
