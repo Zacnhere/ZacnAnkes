@@ -36,7 +36,7 @@ async def _(client, message):
 async def _(client, message):
     user_id = await extract_user(message)
     if not user_id:
-        return await message.reply("<b>Reply to a user or provide a valid ID/username!</b>")
+        return await message.reply("<b>ᴍᴏʜᴏɴ ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴜsᴇʀɴᴀᴍᴇ ᴘᴇɴɢɢᴜɴᴀ!</b>")
     
     try:
         user = await client.get_users(user_id)
@@ -44,7 +44,7 @@ async def _(client, message):
         whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}") or []
         
         if user.id not in whitelist:
-            return await message.reply(f"<b>The user is not in the whitelist!</b>")
+            return await message.reply(f"<b>ᴘᴇɴɢɢᴜɴᴀ ᴛɪᴅᴀᴋ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ</b>")
 
         await DB.remove_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
 
