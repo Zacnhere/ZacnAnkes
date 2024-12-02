@@ -31,7 +31,7 @@ async def _(client, message):
         return await message.reply(f"<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ:</b> {str(e)}")
 
 
-@PY.BOT("remwhite", filters.group)
+@PY.BOT("delwhite", filters.group)
 @PY.ADMIN
 async def _(client, message):
     user_id = await extract_user(message)
@@ -116,7 +116,7 @@ async def _(client, message):
     await message.reply(txt)
     
 
-@PY.BOT("bl|addbl", filters.group)
+@PY.BOT("bl", filters.group)
 @PY.ADMIN
 async def add_to_blacklist(client, message):
     if message.reply_to_message:
@@ -137,7 +137,7 @@ async def add_to_blacklist(client, message):
     return await message.reply(response)
 
 
-@PY.BOT("unbl|removebl", filters.group)
+@PY.BOT("unbl", filters.group)
 @PY.ADMIN
 async def remove_from_blacklist(client, message):
     if message.reply_to_message:
