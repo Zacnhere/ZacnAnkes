@@ -94,7 +94,7 @@ async def _(client, message):
 async def _(client, message):
     if len(message.command) < 2:
         return await message.reply(
-            "<b>Usage: /ankes on or /ankes off</b>"
+            "<b>ɢᴜɴᴀᴋᴀɴ: /ᴀɴᴋᴇs ᴏɴ ᴀᴛᴀᴜ /ᴀɴᴋᴇs ᴏғғ</b>"
         )
 
     query = {"on": True, "off": False}
@@ -102,7 +102,7 @@ async def _(client, message):
     
     if command not in query:
         return await message.reply(
-            "<b>Invalid argument! Use 'on' or 'off'.</b>"
+            "<b>ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ! ɢᴜɴᴀᴋᴀɴ 'ᴏɴ' ᴀᴛᴀᴜ 'ᴏғғ'.</b>"
         )
     
     txt = (
