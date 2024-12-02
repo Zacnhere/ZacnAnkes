@@ -106,9 +106,9 @@ async def _(client, message):
         )
     
     txt = (
-        "<b>Ankes activated successfully!</b>"
+        "<b>ᴍᴇɴʏᴀʟᴀ ᴀʙᴀɴɢ ᴋᴜ</b>"
         if command == "on"
-        else "<b>Ankes deactivated successfully!</b>"
+        else "<b>sɪsᴛᴇᴍ ᴅɪɴᴏɴᴀᴋᴛɪғᴋᴀɴ</b>"
     )
 
     await DB.set_vars(TB.me.id, f"chat_{message.chat.id}", query[command])
