@@ -15,7 +15,7 @@ async def _(client, message):
 
         whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}") or []
         if user.id in whitelist:
-            return await message.reply(f"<b>The user is already in the whitelist!</b>")
+            return await message.reply(f"<b>ᴘᴇɴɢɢᴜɴᴀ sᴜᴅᴀʜ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ</b>")
         
         blacklist = await DB.get_list_vars(TB.me.id, "blacklist") or []
         if user.id in blacklist:
