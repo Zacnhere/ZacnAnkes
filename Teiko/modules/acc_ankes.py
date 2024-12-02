@@ -148,9 +148,9 @@ async def remove_from_blacklist(client, message):
     try:
         await remove_word(client, message, text)
     except ValueError:
-        return await message.reply("<b>Word not found in blacklist.</b>")
+        return await message.reply("<b>ᴋᴀᴛᴀ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ</b>")
     except Exception as e:
-        return await message.reply(f"Error: `{e}`")
+        return await message.reply(f"ᴇʀʀᴏʀ: `{e}`")
 
     response = (
         f"<b>ᴍᴇɴɢʜᴀᴘᴜs ᴋᴀᴛᴀ ᴅᴀʀɪ ᴅᴀғᴛᴀʀ:</b>\n"
@@ -186,7 +186,7 @@ async def remove_word(client, message, text):
 async def handle_message(client, message):
     # Pesan default jika grup tidak terdaftar
     default_text = (
-        "<b>Maaf, Grup ini tidak terdaftar dalam daftar. Silahkan hubungi @shinteiko "
+        "<b>Maaf, Grup ini tidak terdaftar dalam daftar. Silahkan hubungi @Zacnboys "
         "untuk mendaftarkan grup Anda!</b>"
     )
 
