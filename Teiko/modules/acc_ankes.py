@@ -24,11 +24,11 @@ async def _(client, message):
         await DB.add_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
 
         return await message.reply(
-            f"<b>Added to whitelist:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
+            f"<b>ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ ᴋᴇᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
         )
     except Exception as e:
         
-        return await message.reply(f"<b>An error occurred:</b> {str(e)}")
+        return await message.reply(f"<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ:</b> {str(e)}")
 
 
 @PY.BOT("remwhite", filters.group)
@@ -53,7 +53,7 @@ async def _(client, message):
         )
     except Exception as e:
 
-        return await message.reply(f"<b>An error occurred:</b> {str(e)}")     
+        return await message.reply(f"<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ:</b> {str(e)}")     
 
 
 @PY.BOT("whitelist", filters.group)
@@ -222,4 +222,4 @@ async def handle_message(client, message):
         )
     except Exception as e:
         # Penanganan kesalahan umum
-        await message.reply(f"<b>Terjadi kesalahan:</b> {str(e)}")
+        await message.reply(f"<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ:</b> {str(e)}")
