@@ -49,7 +49,7 @@ async def _(client, message):
         await DB.remove_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
 
         return await message.reply(
-            f"<b>Removed from whitelist:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
+            f"<b>ᴅɪʜᴀᴘᴜs ᴅᴀʀɪ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})"
         )
     except Exception as e:
 
@@ -59,7 +59,7 @@ async def _(client, message):
 @PY.BOT("whitelist", filters.group)
 @PY.ADMIN
 async def _(client, message):
-    x = await message.reply("<b>Processing...</b>")
+    x = await message.reply("<b>ᴍᴇᴍᴘᴏsᴇs...</b>")
 
     whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
     if not whitelist:
