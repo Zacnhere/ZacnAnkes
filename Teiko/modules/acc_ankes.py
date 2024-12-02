@@ -143,7 +143,7 @@ async def remove_from_blacklist(client, message):
     if message.reply_to_message:
         text = message.reply_to_message.text or message.reply_to_message.caption
     else:
-        return await message.reply("<b>Reply to a message to remove it from the blacklist.</b>")
+        return await message.reply("<b>ᴘᴇsᴀɴ ɴʏᴀ ᴍᴀɴᴀ ᴛᴏᴅ</b>")
 
     try:
         await remove_word(client, message, text)
@@ -153,7 +153,7 @@ async def remove_from_blacklist(client, message):
         return await message.reply(f"Error: `{e}`")
 
     response = (
-        f"<b>Successfully removed prohibited words:</b>\n"
+        f"<b>ᴍᴇɴɢʜᴀᴘᴜs ᴋᴀᴛᴀ ᴅᴀʀɪ ᴅᴀғᴛᴀʀ:</b>\n"
         f"{text}"
     )
 
