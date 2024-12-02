@@ -122,7 +122,7 @@ async def add_to_blacklist(client, message):
     if message.reply_to_message:
         text = message.reply_to_message.text or message.reply_to_message.caption
     else:
-        return await message.reply("<b>Reply to a message to add it to the blacklist.</b>")
+        return await message.reply("<b>ᴘᴇsᴀɴ ɴʏᴀ ᴍᴀɴᴀ ᴛᴏᴅ</b>")
 
     try:
         await add_word(client, message, text)
@@ -130,7 +130,7 @@ async def add_to_blacklist(client, message):
         return await message.reply(f"Error: `{e}`")
 
     response = (
-        f"<b>Successfully added prohibited words:</b>\n"
+        f"<b>ᴍᴇɴᴀᴍʙᴀʜᴋᴀɴ ᴋᴀᴛᴀ ʙᴜsᴜᴋ ᴋᴇᴅᴀғᴛᴀʀ ʜɪᴛᴀᴍ:</b>\n"
         f"{text}"
     )
 
