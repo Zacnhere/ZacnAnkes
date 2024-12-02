@@ -63,7 +63,7 @@ async def _(client, message):
 
     whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
     if not whitelist:
-        return await x.edit("<b>Whitelist is empty!</b>")
+        return await x.edit("<b>ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ</b>")
     
     white = []
     for user_id in whitelist:
@@ -78,15 +78,15 @@ async def _(client, message):
 
     if white:
         response = (
-            "<b>Whitelist Members:</b>\n\n" +
+            "<b>ᴛᴀᴍᴘɪʟᴀɴ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ:</b>\n\n" +
             "\n".join(white)
         )
         if len(response) > 4000:
-            await x.edit("<b>Whitelist is too large to display here!</b>")
+            await x.edit("<b>ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ ᴛᴇʀʟᴀʟᴜ ʙᴇsᴀʀ\n ᴜɴᴛᴜᴋ ᴅɪᴛᴀᴍᴘɪʟᴋᴀɴ ᴅɪ sɪɴɪ</b>")
             return
         return await x.edit(response)
     else:
-        return await x.edit("<b>Unable to retrieve the whitelist!</b>")   
+        return await x.edit("<b>ᴛɪᴅᴀᴋ ᴅᴀᴘᴀᴛ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀғᴛᴀʀ ᴘᴜᴛɪʜ</b>")   
 
 
 @PY.BOT("ankes", filters.group)
