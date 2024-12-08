@@ -1,0 +1,6 @@
+uvloop
+pyrogram
+pyromod
+rich
+motor
+pytz
