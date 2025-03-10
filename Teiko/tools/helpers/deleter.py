@@ -1,7 +1,6 @@
 import string
 import asyncio
 import aiofiles
-from Teiko import list_admins
 from pyrogram import filters
 from time import time
 from Teiko import *
