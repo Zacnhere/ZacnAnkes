@@ -1,9 +1,18 @@
 import string
 import asyncio
 import aiofiles
+from Teiko import list_admins
 from pyrogram import filters
 from time import time
 from Teiko import *
+
+
+async def list_admins(client, chat_id):
+    admins = []
+    async for member in client.get_chat_members(chat_id, filter="administrators"):
+        admins.append(member.user.id)
+    return admins
+
 
 async def isGcast(filter, client, update):
     # Membaca daftar kata terlarang dari file
