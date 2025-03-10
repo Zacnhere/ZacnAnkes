@@ -72,3 +72,4 @@ async def isGcast(client, message):
 
     return False  # Pesan aman
 
+Ankes = filters.create(isGcast)
