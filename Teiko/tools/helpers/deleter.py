@@ -32,5 +32,3 @@ async def isGcast(filter, client, update):
     # Ambil teks pesan
     message_text = update.text.lower()
 
-    # 1️⃣ Hapus karakter khusus dari teks
-    cleaned_text = ''.join(char for char in update.text if char.isalnum() or char.isspace())
