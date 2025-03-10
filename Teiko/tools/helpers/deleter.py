@@ -4,7 +4,13 @@ import aiofiles
 from pyrogram.enums import ChatMembersFilter
 from pyrogram import filters
 from time import time
+from Teiko.tools.helpers import deleter
 from Teiko import *
+
+
+def list_admins(chat_id):
+    return []
+
 
 async def get_admins(client, chat_id):
     """Mengambil daftar admin dari grup."""
