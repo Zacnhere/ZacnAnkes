@@ -1,11 +1,9 @@
 import string
-
+import asyncio
+import aiofiles
 from pyrogram import filters
 from time import time
-
 from Teiko import *
-
-
 
 async def isGcast(filter, client, update):
     # Membaca daftar kata terlarang dari file
