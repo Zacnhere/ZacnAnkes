@@ -71,8 +71,19 @@ async def _(client, message):
 async def _(client, message):
     x = await message.reply("<b>Clearing whitelist...</b>")
     try:
-        await DB.set_list_vars(TB.me.id, f"whitelist_{message.chat.id}", [])
-        return await x.edit("<b>Whitelist has been cleared!</b>")
+        chat_id = message.chat.id
+        whitelist_key = f"whitelist_{chat_id}"
+        
+        # Ambil daftar whitelist khusus untuk grup ini
+        whitelist = await DB.get_list_vars(TB.me.id, whitelist_key)
+        if not whitelist:
+            return await x.edit("<b>Whitelist for this group is already empty!</b>")
+        
+        # Hapus semua user dari whitelist grup ini
+        for user_id in whitelist:
+            await DB.remove_list_vars(TB.me.id, whitelist_key, user_id)
+        
+        return await x.edit("<b>Whitelist for this group has been cleared!</b>")
     except Exception as e:
         return await x.edit(f"<b>An error occurred:</b> {str(e)}")
 
