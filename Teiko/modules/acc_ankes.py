@@ -13,14 +13,14 @@ async def _(client, message):
     try:
         user = await client.get_users(user_id)
         whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
-        if user_id in whitelist:
-            return await message.reply(f"<b>Already on whitelist!</b>")
+        if str(user_id) in whitelist:
+            return await message.reply("<b>Already on whitelist!</b>")
         blacklist = await DB.get_list_vars(TB.me.id, "blacklist")
-        if user_id in blacklist:
+        if str(user_id) in blacklist:
             return await message.reply("<b>The user is registered in the blacklist!</b>")
             
-        await DB.add_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
-        return await message.reply(f"<b>Adding to whitelist!</b>  [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})")
+        await DB.add_list_vars(TB.me.id, f"whitelist_{message.chat.id}", str(user.id))
+        return await message.reply(f"<b>Added to whitelist!</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})")
     except Exception as e:
         return await message.reply(f"<b>An error occurred:</b> {str(e)}")
 
@@ -35,10 +35,11 @@ async def _(client, message):
     try:
         user = await client.get_users(user_id)
         whitelist = await DB.get_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
-        if user_id not in whitelist:
-            return await message.reply(f"<b>Not in whitelist!</b>")
-        await DB.remove_list_vars(TB.me.id, f"whitelist_{message.chat.id}", user.id)
-        return await message.reply(f"<b>Remove to whitelist!</b>  [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})")
+        if str(user_id) not in whitelist:
+            return await message.reply("<b>Not in whitelist!</b>")
+        
+        await DB.remove_list_vars(TB.me.id, f"whitelist_{message.chat.id}", str(user.id))
+        return await message.reply(f"<b>Removed from whitelist!</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})")
     except Exception as e:
         return await message.reply(f"<b>An error occurred:</b> {str(e)}")
 
@@ -59,16 +60,22 @@ async def _(client, message):
                 f"<b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id}) | <code>{user.id}</code></b>"
             )
         except:
-            white.append(f"<code>{user.id}</code>")
-            continue
-    if white:
-        response = (
-            "<b>Whitelist!</b>\n\n"
-            + "\n".join(white)
-        )
-        return await x.edit(response)
-    else:
-        return await x.edit("<b>Unable to retrieve list!</b>")
+            white.append(f"<code>{user_id}</code>")
+    
+    response = "<b>Whitelist!</b>\n\n" + "\n".join(white)
+    return await x.edit(response)
+
+
+@PY.BOT("clearwhitelist", filters.group)
+@PY.ADMIN
+async def _(client, message):
+    x = await message.reply("<b>Clearing whitelist...</b>")
+    try:
+        await DB.set_list_vars(TB.me.id, f"whitelist_{message.chat.id}", [])
+        return await x.edit("<b>Whitelist has been cleared!</b>")
+    except Exception as e:
+        return await x.edit(f"<b>An error occurred:</b> {str(e)}")
+
 
 
 @PY.BOT("ankes", filters.group)
