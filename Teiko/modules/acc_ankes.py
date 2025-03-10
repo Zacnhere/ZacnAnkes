@@ -31,6 +31,29 @@ async def _(client, message):
         return await message.reply(f"<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ:</b> {str(e)}")
 
 
+@PY.BOT("clearwhite", filters.group)
+@PY.ADMIN
+async def clear_whitelist(client, message):
+    confirm_text = (
+        "<b>Apakah Anda yakin ingin menghapus semua daftar putih?</b>\n\n"
+        "Balas dengan <code>konfirmasi</code> dalam 30 detik untuk melanjutkan."
+    )
+    
+    confirm_message = await message.reply(confirm_text)
+    
+    try:
+        # Tunggu respon selama 30 detik
+        response = await client.listen(message.chat.id, timeout=30)
+
+        if response.text.lower() == "konfirmasi":
+            await DB.delete_list_vars(TB.me.id, f"whitelist_{message.chat.id}")
+            return await confirm_message.edit("<b>Semua daftar putih telah dihapus!</b>")
+        else:
+            return await confirm_message.edit("<b>Pembersihan daftar putih dibatalkan.</b>")
+    except TimeoutError:
+        return await confirm_message.edit("<b>Tidak ada respon. Pembersihan daftar putih dibatalkan.</b>")
+
+
 @PY.BOT("delwhite", filters.group)
 @PY.ADMIN
 async def _(client, message):
