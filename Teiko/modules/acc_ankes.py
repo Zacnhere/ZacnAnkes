@@ -1,5 +1,5 @@
 from pyrogram import *
-from filters import Ankes
+import Ankes
 from Teiko import *
 
 
