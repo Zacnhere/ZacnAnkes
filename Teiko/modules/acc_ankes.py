@@ -207,9 +207,6 @@ async def remove_word(client, message, text):
     await DB.set_vars(TB.me.id, f"word_{message.chat.id}", bl_text)
         
 
-# Definisi filter Ankes jika belum ada
-Ankes = filters.create(lambda _, __, message: "spam" in message.text.lower())  # Ganti sesuai kebutuhan
-
 @TB.on_message(filters.text & ~filters.private & Ankes)
 async def handle_message(client, message):
     default_text = (
