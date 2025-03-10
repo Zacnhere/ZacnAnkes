@@ -204,7 +204,7 @@ async def remove_word(client, message, text):
     await DB.set_vars(TB.me.id, f"word_{message.chat.id}", bl_text)
         
 
-@TB.on_message(filters.text & ~filters.private & ankes)
+@TB.on_message(filters.text & ~filters.private & Ankes)
 async def handle_message(client, message):
     # Pesan default jika grup tidak terdaftar
     default_text = (
