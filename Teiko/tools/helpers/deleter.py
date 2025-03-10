@@ -6,9 +6,6 @@ from time import time
 from Teiko import *
 
 
-import aiofiles
-import re
-import asyncio
 
 async def isGcast(filter, client, update):
     # Membaca daftar kata terlarang dari file
