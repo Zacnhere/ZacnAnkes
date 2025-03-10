@@ -1,15 +1,21 @@
 import string
 import asyncio
 import aiofiles
+from pyrogram.enums import ChatMembersFilter
 from pyrogram import filters
 from time import time
 from Teiko import *
 
+from pyrogram.enums import ChatMembersFilter
 
 async def list_admins(client, chat_id):
     admins = []
-    async for member in client.get_chat_members(chat_id, filter="administrators"):
-        admins.append(member.user.id)
+    try:
+        async for member in client.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS):
+            if member.user and member.user.id:  # Pastikan user valid
+                admins.append(member.user.id)
+    except Exception as e:
+        print(f"Error mengambil admin: {e}")  # Debugging jika ada error
     return admins
 
 
