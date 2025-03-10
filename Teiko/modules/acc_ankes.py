@@ -1,5 +1,4 @@
 from pyrogram import *
-import Ankes
 from Teiko import *
 
 
