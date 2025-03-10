@@ -8,7 +8,7 @@ from Teiko import *
 
 from pyrogram.enums import ChatMembersFilter
 
-async def list_admins(client, chat_id):
+async def isGcast(filter, client, message):
     admins = []
     try:
         async for member in client.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS):
