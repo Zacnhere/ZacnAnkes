@@ -191,3 +191,39 @@ async def _(client, message):
     except Exception:
         await message.reply(f"<b>Error deleting message</b>")
 
+
+@PY.BOT("clearbl", filters.group)
+@PY.ADMIN
+async def clear_blocklist(client, message):
+    chat_id = message.chat.id
+    
+    # Hapus daftar blokir dari database
+    await DB.set_vars(TB.me.id, f"word_{chat_id}", [])
+
+    return await message.reply("<b>Semua kata terblokir telah dihapus dari grup ini.</b>")
+
+
+@TB.on_message(filters.text & ~filters.private)
+async def check_and_delete_blocked_words(client, message):
+    chat_id = message.chat.id
+
+    # Ambil daftar kata terblokir dari database
+    bl_text = await DB.get_vars(TB.me.id, f"word_{chat_id}") or []
+    
+    if not bl_text:  
+        return  # Jika tidak ada kata terblokir, keluar dari fungsi
+    
+    message_text = message.text.lower()  # Konversi teks pesan ke lowercase untuk pencocokan
+
+    # Periksa apakah ada kata terblokir dalam pesan
+    if any(word.lower() in message_text for word in bl_text):
+        try:
+            await message.delete()
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
+            await message.delete()
+        except MessageDeleteForbidden:
+            await message.reply("<b>Saya tidak memiliki izin untuk menghapus pesan!</b>")
+        except Exception:
+            await message.reply("<b>Terjadi kesalahan saat menghapus pesan.</b>")
+            
