@@ -5,7 +5,7 @@ from Teiko import *
 
 
 @PY.BOT("adduser", filters.group)
-@PY.OWNER
+@PY.ADMIN
 async def _(client, message):
     user_id = await extract_user(message)
     if not user_id:
@@ -27,7 +27,7 @@ async def _(client, message):
 
 
 @PY.BOT("remuser", filters.group)
-@PY.OWNER
+@PY.ADMIN
 async def _(client, message):
     user_id = await extract_user(message)
     if not user_id:
@@ -47,7 +47,7 @@ async def _(client, message):
 
 
 @PY.BOT("listuser", filters.group)
-@PY.OWNER
+@PY.ADMIN
 async def _(client, message):
     x = await message.reply("<b>Processing...</b>")
     whitelist = await DB.get_list_vars(TB.me.id, "anti_message_user")
