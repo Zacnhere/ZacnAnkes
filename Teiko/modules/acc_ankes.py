@@ -205,15 +205,55 @@ async def _(client, message):
         await message.reply(f"<b>Error deleting message</b>")
 
 
+async def get_blacklist(chat_id):
+    """Mengambil daftar kata terlarang dari database."""
+    return DB.get(f"word_{chat_id}", [])
+
+async def add_blacklist(chat_id, word):
+    """Menambahkan kata ke daftar terlarang."""
+    DB.setdefault(f"word_{chat_id}", []).append(word.lower())
+
+async def remove_blacklist(chat_id, word):
+    """Menghapus kata tertentu dari blacklist."""
+    if f"word_{chat_id}" in DB:
+        DB[f"word_{chat_id}"] = [w for w in DB[f"word_{chat_id}"] if w != word.lower()]
+
+async def clear_blacklist(chat_id):
+    """Menghapus semua kata dari daftar terlarang."""
+    DB.pop(f"word_{chat_id}", None)
+
+
 @PY.BOT("clearbl", filters.group)
 @PY.ADMIN
-async def clear_blocklist(client, message):
+async def clear_blocklist(client: Client, message: Message):
+    """Meminta konfirmasi sebelum menghapus semua blacklist."""
     chat_id = message.chat.id
-    
-    # Hapus daftar blokir dari database
-    await DB.set_vars(TB.me.id, f"word_{chat_id}", [])
 
-    return await message.reply("<b>Semua kata terblokir telah dihapus dari grup ini.</b>")
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("✅ Ya, Hapus", callback_data=f"confirm_clearbl_{chat_id}")],
+        [InlineKeyboardButton("❌ Batal", callback_data="cancel_clearbl")]
+    ])
+
+    return await message.reply(
+        "<b>Apakah Anda yakin ingin menghapus semua kata dari daftar blacklist?</b>",
+        reply_markup=keyboard
+    )
+
+@PY.CALLBACK("confirm_clearbl_")
+async def confirm_clear_blacklist(client: Client, callback_query: CallbackQuery):
+    """Menghapus semua blacklist setelah konfirmasi."""
+    chat_id = int(callback_query.data.split("_")[-1])
+    
+    await clear_blacklist(chat_id)
+
+    await callback_query.message.edit_text(
+        "<b>✅ Semua kata blacklist telah dihapus!</b>"
+    )
+
+@PY.CALLBACK("cancel_clearbl")
+async def cancel_clear_blacklist(client: Client, callback_query: CallbackQuery):
+    """Membatalkan penghapusan blacklist."""
+    await callback_query.message.edit_text("<b>❌ Penghapusan blacklist dibatalkan.</b>"
 
 
 @TB.on_message(filters.text & ~filters.private)
