@@ -253,7 +253,7 @@ async def confirm_clear_blacklist(client: Client, callback_query: CallbackQuery)
 @PY.CALLBACK("cancel_clearbl")
 async def cancel_clear_blacklist(client: Client, callback_query: CallbackQuery):
     """Membatalkan penghapusan blacklist."""
-    await callback_query.message.edit_text("<b>❌ Penghapusan blacklist dibatalkan.</b>"
+    await callback_query.message.edit_text("<b>❌ Penghapusan blacklist dibatalkan.</b>")
 
 
 @TB.on_message(filters.text & ~filters.private)
