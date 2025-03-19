@@ -34,7 +34,7 @@ async def isGcast(filter, client, update):
         blc_words = {w.lower().strip() for w in file.readlines()}
 
     # Tambahkan karakter terlarang
-    bl_chars = set("$_&-+*"':;!?~`|•√π÷×§∆£¢€¥^°=\%©®™✓<>⟩»≥›«≤‹⟨‰℅∞≠≈←↑↓→¶ΠΩμ♪№₹₱—–·±★†‡¿‽")
+    bl_chars = set("$_&-+*"':;!?~`|•√π÷×§∆£¢€¥°=\%©®™✓<>⟩»≥›«≤‹⟨‰℅∞≠≈←↑↓→¶ΠΩμ♪№₹₱—–·±★†‡¿‽")
 
     # Gabungkan blacklist kata dan karakter ke dalam satu set
     blc_set = blc_words | bl_chars
