@@ -154,6 +154,19 @@ async def _(client, message):
     return await message.reply(response)
 
 
+@PY.BOT("blist", filters.group)
+@PY.ADMIN
+async def list_blacklist(client: Client, message: Message):
+    """Menampilkan daftar kata yang sudah di-blacklist."""
+    bl_words = await get_blacklist()
+    
+    if not bl_words:
+        return await message.reply("<b>Blacklist kosong.</b>")
+
+    response = "<b>Daftar Kata Terlarang:</b>\n" + "\n".join(f"- {word}" for word in bl_words)
+    return await message.reply(response)
+
+
 async def add_word(client, message, text):
     bl_text = await DB.get_vars(TB.me.id, f"word_{message.chat.id}") or []
     bl_text.append(text)
@@ -168,7 +181,7 @@ async def remove_word(client, message, text):
 
 @TB.on_message(filters.text & ~filters.private & Ankes)
 async def _(client, message):
-    text = "<b>Maaf, Grup ini tidak terdaftar di dalam list. Silahkan hubungi @shinteiko Untuk mendaftarkan Group Anda!</b>"
+    text = "<b>Maaf, Grup ini tidak terdaftar di dalam list. Silahkan hubungi @Zacnboys Untuk mendaftarkan Group Anda!</b>"
     chat_id = message.chat.id
     chats = await DB.get_list_vars(TB.me.id, "ankes_group")
 
