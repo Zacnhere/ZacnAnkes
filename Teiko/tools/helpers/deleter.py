@@ -65,4 +65,9 @@ async def isGcast(filter, client, update):
 
 # Buat filter Pyrogram
 Ankes = filters.create(isGcast)
-    
+
+
+import unicodedata
+
+def normalize_text(text):
+    return unicodedata.normalize("NFKC", text)
