@@ -158,7 +158,7 @@ async def _(client, message):
 @PY.ADMIN
 async def list_blacklist(client: Client, message: Message):
     """Menampilkan daftar kata yang sudah di-blacklist."""
-    bl_words = await get_blacklist()
+    bl_words = await DB.get_vars(TB.me.id, f"word_{message.chat.id}") or []
     
     if not bl_words:
         return await message.reply("<b>Blacklist kosong.</b>")
