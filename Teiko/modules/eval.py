@@ -1,3 +1,42 @@
+import os
+import platform
+import subprocess
+import sys
+import traceback
+import io
+import asyncio
+import time
+import contextlib
+import pyrogram
+import html
+import time
+import uuid
+
+from time import time
+from datetime import date
+from io import BytesIO, StringIO
+from io import BytesIO
+import psutil
+
+from meval import meval
+from pyrogram import Client, filters
+from pyrogram.types import Message
+from pyrogram import enums
+from pyrogram import raw
+
+from pyrogram import Client, filters
+from pyrogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+    MessageEntity,
+)
+
+
+import psutil
+
+from Teiko import *
+
 @PY.BOT("sh")
 @PY.UBOT("sh")
 async def _(client, message):
