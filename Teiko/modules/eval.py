@@ -6,6 +6,7 @@ from pyrogram import *
 from Teiko import *
 
 
+app = Client("my_bot")
 OWNER_ID = 1361379181  # Ganti dengan ID pemilik bot
 
 @app.on_message(filters.command(["sh", "shutdown", "restart", "update", "clean", "host"]) & filters.user(OWNER_ID))
