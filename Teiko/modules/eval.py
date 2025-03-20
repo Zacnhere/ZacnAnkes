@@ -1,7 +1,9 @@
 from pyrogram import Client, filters
 import os, sys, subprocess, platform, psutil
 from io import BytesIO
-import *
+from pyrogram import *
+
+from Teiko import *
 
 
 OWNER_ID = 1361379181  # Ganti dengan ID pemilik bot
