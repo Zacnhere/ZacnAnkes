@@ -1,95 +1,53 @@
-import os
-import platform
-import subprocess
-import sys
-import traceback
-import io
-import asyncio
-import time
-import contextlib
-import pyrogram
-import html
-import time
-import uuid
-
-from time import time
-from datetime import date
-from io import BytesIO, StringIO
+from pyrogram import Client, filters
+import os, sys, subprocess, platform, psutil
 from io import BytesIO
-import psutil
-
-from meval import meval
-from pyrogram import Client, filters
-from pyrogram.types import Message
-from pyrogram import enums
-from pyrogram import raw
-
-from pyrogram import Client, filters
-from pyrogram.types import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-    MessageEntity,
-)
+import *
 
 
-import psutil
+OWNER_ID = 1361379181  # Ganti dengan ID pemilik bot
 
-from Teiko import *
-
-@PY.BOT("sh")
-@PY.UBOT("sh")
-async def _(client, message):
-    if message.from_user.id != 1361379181:
-        await message.reply_text(f"<b>ᴍᴀᴜ ɴɢᴀᴘᴀɪɴ ᴀɴᴊᴇɴᴋ?</b>")
-        return
-    command = get_arg(message)
-    msg = await message.reply("🔄<b>ᴘʀᴏᴄᴇssɪɴɢ...</b>", quote=True)
+@app.on_message(filters.command(["sh", "shutdown", "restart", "update", "clean", "host"]) & filters.user(OWNER_ID))
+async def shell_command(client, message):
+    command = message.command[1] if len(message.command) > 1 else None
+    msg = await message.reply("🔄 <b>Processing...</b>", quote=True)
+    
     if not command:
-        return await msg.edit("<b>ɴᴏᴏʙ</b>")
+        return await msg.edit("<b>No command provided!</b>")
+    
     try:
-        if command == "shutdown":
+        if message.text.startswith("/shutdown"):
             await msg.delete()
             await handle_shutdown(message)
-        elif command == "restart":
+        elif message.text.startswith("/restart"):
             await msg.delete()
             await handle_restart(message)
-        elif command == "update":
+        elif message.text.startswith("/update"):
             await msg.delete()
             await handle_update(message)
-        elif command == "clean":
+        elif message.text.startswith("/clean"):
             await handle_clean(message)
             await msg.delete()
-        elif command == "host":
+        elif message.text.startswith("/host"):
             await handle_host(message)
-            await msg.delete() 
+            await msg.delete()
         else:
             await process_command(message, command)
             await msg.delete()
     except Exception as error:
-        await msg.edit(error)
-
+        await msg.edit(str(error))
 
 async def handle_shutdown(message):
-    await message.reply("<blockquote>✅ <b>ꜱʏꜱᴛᴇᴍ ʙᴇʀʜᴀꜱɪʟ ᴅɪ ᴍᴀᴛɪᴋᴀɴ</b></blockquote>", quote=True)
+    await message.reply("✅ <b>System has been shut down.</b>", quote=True)
     os.system(f"kill -9 {os.getpid()}")
 
-
 async def handle_restart(message):
-    await message.reply("<blockquote>✅ <b>ꜱʏꜱᴛᴇᴍ ʙᴇʀʜᴀꜱɪʟ ᴅɪ ʀᴇꜱᴛᴀʀᴛ</b></blockquote>", quote=True)
-    os.execl(sys.executable, sys.executable, "-m", "PyroUbot")
-
+    await message.reply("✅ <b>System is restarting...</b>", quote=True)
+    os.execl(sys.executable, sys.executable, "-m", "Teiko")
 
 async def handle_update(message):
     out = subprocess.check_output(["git", "pull"]).decode("UTF-8")
-    if "Already up to date." in str(out):
-        return await message.reply(out, quote=True)
-    elif int(len(str(out))) > 4096:
-        await send_large_output(message, out)
-    else:
-        await message.reply(f"```{out}```", quote=True)
-    os.execl(sys.executable, sys.executable, "-m", "PyroUbot")
-
+    await message.reply(f"```{out}```", quote=True)
+    os.execl(sys.executable, sys.executable, "-m", "Teiko")
 
 async def handle_clean(message):
     count = 0
@@ -99,29 +57,24 @@ async def handle_clean(message):
             count += 1
         except:
             pass
-    await bash("rm -rf downloads")
-    await message.reply(f"<blockquote><b>✅ {count} sᴀᴍᴘᴀʜ ʙᴇʀʜᴀsɪʟ ᴅɪ ʙᴇʀsɪʜᴋᴀɴ</b></blockquote>")
-
+    await message.reply(f"✅ {count} files cleaned.", quote=True)
 
 async def process_command(message, command):
-    result = (await bash(command))[0]
-    if int(len(str(result))) > 4096:
+    result = subprocess.getoutput(command)
+    if len(result) > 4096:
         await send_large_output(message, result)
     else:
-        await message.reply(result)
-
+        await message.reply(f"<code>{result}</code>", quote=True, parse_mode="html")
 
 async def send_large_output(message, output):
     with BytesIO(str.encode(str(output))) as out_file:
         out_file.name = "result.txt"
         await message.reply_document(document=out_file)
 
-
 async def handle_host(message):
     system_info = get_system_info()
     formatted_info = format_system_info(system_info)
     await message.reply(formatted_info, quote=True)
-
 
 def get_system_info():
     uname = platform.uname()
@@ -132,27 +85,19 @@ def get_system_info():
         "release": uname.release,
         "version": uname.version,
         "machine": uname.machine,
-        "boot_time": psutil.boot_time(),
-        "cpu_physical_cores": psutil.cpu_count(logical=False),
-        "cpu_total_cores": psutil.cpu_count(logical=True),
-        "cpu_max_frequency": cpufreq.max,
-        "cpu_min_frequency": cpufreq.min,
-        "cpu_current_frequency": cpufreq.current,
-        "cpu_percent_per_core": [
-            percentage for percentage in psutil.cpu_percent(percpu=True)
-        ],
-        "cpu_total_usage": psutil.cpu_percent(),
-        "network_upload": get_size(psutil.net_io_counters().bytes_sent),
-        "network_download": get_size(psutil.net_io_counters().bytes_recv),
-        "memory_total": get_size(svmem.total),
-        "memory_available": get_size(svmem.available),
-        "memory_used": get_size(svmem.used),
-        "memory_percentage": svmem.percent,
+        "cpu_cores": psutil.cpu_count(logical=True),
+        "cpu_freq": cpufreq.max,
+        "memory_total": svmem.total,
+        "memory_used": svmem.used,
+        "memory_percent": svmem.percent,
     }
 
-
-
 def format_system_info(system_info):
-    formatted_info = "Informasi Sistem\n"
-    formatted_info += f"Sistem   : {system_info['system']}\n"
-    formatted_info += f"Rilis    : {system_info['release']}\n"
+    return (f"<b>System Information:</b>\n"
+            f"System: {system_info['system']}\n"
+            f"Release: {system_info['release']}\n"
+            f"CPU Cores: {system_info['cpu_cores']}\n"
+            f"CPU Max Frequency: {system_info['cpu_freq']} MHz\n"
+            f"Memory Total: {system_info['memory_total']} bytes\n"
+            f"Memory Used: {system_info['memory_used']} bytes\n"
+            f"Memory Usage: {system_info['memory_percent']}%")
