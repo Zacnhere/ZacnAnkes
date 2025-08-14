@@ -1,20 +1,13 @@
 {
   "name": "Userbot Pyrogram",
   "description": "Userbot Telegram",
-  "repository": "https://github.com/Zacnhere/ZacnUbot",
+  "repository": "https://github.com/Zacnhere/ZacnAnkes",
   "keywords": [
     "telegram",
     "python",
     "bot",
-    "yt-dlp",
-    "openai",
     "pyrogram"
   ],
-  "env": {
-    "MAX_BOT": {
-      "description": "Jumlah maksimum bot yang aktif",
-      "value": "100",
-      "required": true
     },
     "API_ID": {
       "description": "Telegram API ID dari my.telegram.org",
@@ -36,24 +29,9 @@
       "value": "1361379181",
       "required": true
     },
-    "BLACKLIST_CHAT": {
-      "description": "ID grup atau channel yang diblokir (pisahkan dengan spasi jika lebih dari satu)",
-      "value": "-1002404887725",
-      "required": true
-    },
-    "RMBG_API": {
-      "description": "API key untuk remove.bg",
-      "value": "a6qxsmMJ3CsNo7HyxuKGsP1o",
-      "required": true
-    },
-    "OPENAI_KEY": {
-      "description": "API key untuk OpenAI",
-      "value": "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",
-      "required": true
-    },
     "MONGO_URL": {
       "description": "URL koneksi MongoDB",
-      "value": "mongodb+srv://ZacnUltra:ZacnUltra@cluster0.sxsbl.mongodb.net/?retryWrites=true&w=majority&appName=ZACNHERE",
+      "value": "mongodb+srv://ZacnAnkes:ZacnAnkes@cluster0.qgeaz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
       "required": true
     }
   },
