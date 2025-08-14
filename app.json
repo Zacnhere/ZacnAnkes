@@ -8,7 +8,7 @@
     "bot",
     "pyrogram"
   ],
-    },
+  "env": {
     "API_ID": {
       "description": "Telegram API ID dari my.telegram.org",
       "value": "8986091",
